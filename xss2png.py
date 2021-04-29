@@ -11,16 +11,16 @@ from PIL import Image
 def banner():
 	print("XSS2PNG")
 
-
+# arguments parser
 def parse_args():
-    parser = argparse.ArgumentParser(
-        description="PNG IDAT chunks XSS payload generator", epilog="Don't be evil :)"
-    )
-    parser.add_argument("-p", dest="payload", help="XSS Payload", required=True)
-    parser.add_argument("-o", dest="output", help="Output .png file", required=True)
-    return parser.parse_args()
+	parser = argparse.ArgumentParser(
+		description="PNG IDAT XSS Payload generator", epilog="Dont be evil"
+		)
+	parser.add_argument("-p", dest="payload", help="XSS Payload", required=True)
+	parser.add_argument("-o", dest="output", helper="Output .png file", required=True)
+	return parser.parse_args()
 
-
+# main code for debuging the payload into the png
 def reverse_huffman(huffman):
     bitstream = ""
     for char in list(huffman):
@@ -79,7 +79,7 @@ def reverse_huffman(huffman):
 
     return "".join(chars)
 
-
+# compresser
 def gzdeflate(string):
     compressor = zlib.compressobj(9, zlib.DEFLATED, -zlib.MAX_WBITS)
     compressed = compressor.compress(string)
@@ -119,6 +119,7 @@ def reverse_filter_3(bin_string):
     return payload
 
 
+# bypass png filters in a website
 def bypass_png_filters(inflate):
     one = reverse_filter_1(inflate)
     three = reverse_filter_3(inflate)
@@ -126,6 +127,7 @@ def bypass_png_filters(inflate):
     return mergedlist
 
 
+# generate the final png 
 def generate_final_payload(payload, png_output):
     print("[i] Generating final PNG output")
     # Thanks to admanLogue and hLk_886 for this PNG Code
