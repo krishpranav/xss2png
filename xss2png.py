@@ -112,4 +112,9 @@ def reverse_filter_3(bin_string):
     for filter3 in p:
         payload.append(filter3)
     return payload
-    
+
+def bypass_png_filter(inflate):
+	one = reverse_filter_1(inflate)
+	three = reverse_filter_3(inflate)
+	mergedlist = one + three
+	return mergedlist
