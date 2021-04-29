@@ -86,4 +86,30 @@ def gzdeflate(string):
 
 def to_ord_array(bin_string):
 	return [ord(char) for char in bin_string]
-	
+
+def reverse_filter_1(bin_string):
+    p = to_ord_array(bin_string)
+    s = len(p)
+
+    payload = []
+    i = 0
+    while i < (len(p) - 3):
+        p[i + 3] = (p[i + 3] + p[i]) % 256
+        i += 1
+    for filter1 in p:
+        payload.append(filter1)
+    return payload
+
+def reverse_filter_3(bin_string):
+    p = to_ord_array(bin_string)
+    s = len(p)
+
+    payload = []
+    i = 0
+    while i < (len(p) - 3):
+        p[i + 3] = (p[i + 3] + int(p[i] / 2)) % 256
+        i += 1
+    for filter3 in p:
+        payload.append(filter3)
+    return payload
+    
