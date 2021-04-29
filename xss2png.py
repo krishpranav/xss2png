@@ -77,4 +77,13 @@ def reverse_huffman(huffman):
             print("END")
 
     return "".join(chars)
-    
+
+def gzdeflate(string):
+    compressor = zlib.compressobj(9, zlib.DEFLATED, -zlib.MAX_WBITS)
+    compressed = compressor.compress(string)
+    compressed += compressor.flush()
+    return compressed
+
+def to_ord_array(bin_string):
+	return [ord(char) for char in bin_string]
+	
