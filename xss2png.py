@@ -166,9 +166,6 @@ if __name__ == "__main__":
             break
         else:
             break
-
-    # print ("Deflated: "+str(deflated))
-    # print ("Reversed: "+str(reversed))
-
-    payload = bypass_png_filters(str(reversed))
-    generate_final_payload(payload, args.output)
+            
+	payload = bypass_png_filters(str(reversed))
+	generate_final_payload(payload, args.output)
